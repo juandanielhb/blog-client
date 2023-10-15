@@ -1,0 +1,105 @@
+<div class="container mt-3">
+  <div class="row">
+
+    <div class="col-md-6">
+      <h2>Create a New Post</h2>
+      <div class="card mb-3 p-3">
+        <form [formGroup]="postForm" (ngSubmit)="createPost()" class="row g-3">
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Post Title</label>
+            <input type="text" class="form-control" id="postTitle" formControlName="postTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="postContent" class="form-label">Post Content</label>
+            <textarea class="form-control" id="postContent" formControlName="postContent" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Post</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <h2>Posts</h2>
+      <div *ngFor="let post of posts">
+        <div class="card mb-3">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="card-title">{{ post.title }}</h4>
+              <span class="edit-delete-icons">
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editComment">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button type="button" class="btn btn-link">
+                  <i class="fas fa-trash" (click)="deletePost(post.id)"></i>
+                </button>
+              </span>
+            </div>
+
+            <h6 class="card-subtitle mb-2 text-muted fw-light">
+              {{post.author.name}} - {{post.createdAt | date:'medium' }}
+            </h6>
+            <p class="card-text">{{ post.content }}</p>
+            <h5 class="card-subtitle mb-2 text-muted">Comments</h5>
+            <form [formGroup]="commentForm" (ngSubmit)="addComment(post.id)">
+              <div class="mb-3">
+                <input type="text" class="form-control" id="newComment" formControlName="text" required>
+              </div>
+              <button type="submit" class="btn btn-primary mb-2">Add Comment</button>
+            </form>
+            <div *ngFor="let comment of post.comments">
+              <div class="card mb-2 bg-light">
+                <div class="card-body">
+
+                  <div class="d-flex justify-content-between align-items-top">
+                    <p class="card-text col-8">
+                      <label class="card-subtitle text-muted fw-light">{{comment.author.name}} - {{comment.createdAt |
+                        date:'medium' }}</label>
+                    </p>
+                    <span class="edit-delete-icons">
+                      <button type="button" class="btn btn-link" data-bs-toggle="modal"
+                        data-bs-target="#editComment">
+                        <i class="fas fa-edit" ></i>
+                      </button>
+                      <button type="button" class="btn btn-link">
+                        <i class="fas fa-trash" (click)="deleteComment(post.id, comment.id)"></i>
+                      </button>
+
+                    </span>
+                  </div>
+                  <p class="card-text">{{ comment.text }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- editComment modal -->
+<div class="modal fade" id="editComment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Edit Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="editCommentForm" (ngSubmit)="updateComment()">
+        <div class="modal-body">        
+          <div class="mb-3">
+            <label for="commentText" class="form-label">Text</label>
+            <input type="text" class="form-control" id="commentText" formControlName="text" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
