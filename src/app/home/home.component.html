@@ -6,11 +6,11 @@
       <div class="card mb-3 p-3">
         <form [formGroup]="postForm" (ngSubmit)="createPost()" class="row g-3">
           <div class="mb-3">
-            <label for="postTitle" class="form-label">Post Title</label>
+            <label for="postTitle" class="form-label">Title</label>
             <input type="text" class="form-control" id="postTitle" formControlName="postTitle" required>
           </div>
           <div class="mb-3">
-            <label for="postContent" class="form-label">Post Content</label>
+            <label for="postContent" class="form-label">Content</label>
             <textarea class="form-control" id="postContent" formControlName="postContent" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Submit Post</button>
@@ -27,8 +27,8 @@
             <div class="d-flex justify-content-between align-items-center">
               <h4 class="card-title">{{ post.title }}</h4>
               <span class="edit-delete-icons">
-                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editComment">
-                  <i class="fas fa-edit"></i>
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editPost">
+                  <i class="fas fa-edit" (click)="setEditionInfo(post, '')"></i>
                 </button>
                 <button type="button" class="btn btn-link">
                   <i class="fas fa-trash" (click)="deletePost(post.id)"></i>
@@ -59,7 +59,7 @@
                     <span class="edit-delete-icons">
                       <button type="button" class="btn btn-link" data-bs-toggle="modal"
                         data-bs-target="#editComment">
-                        <i class="fas fa-edit" ></i>
+                        <i class="fas fa-edit" (click)="setEditionInfo(post, comment)"></i>
                       </button>
                       <button type="button" class="btn btn-link">
                         <i class="fas fa-trash" (click)="deleteComment(post.id, comment.id)"></i>
@@ -78,6 +78,34 @@
   </div>
 </div>
 
+<!-- editPost modal -->
+<div class="modal fade" id="editPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Edit Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="editPostForm" (ngSubmit)="updatePost()">
+        <div class="modal-body">        
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="editPostTitle" formControlName="postTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="postContent" class="form-label">Content</label>
+            <textarea class="form-control" id="editPostContent" formControlName="postContent" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- editComment modal -->
 <div class="modal fade" id="editComment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -96,7 +124,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save Changes</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </form>

@@ -16,6 +16,8 @@ export class HomeComponent {
   editPostForm: any;
   commentForm: any;
   editCommentForm: any;
+  postId: string = "";
+  commentId: string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +65,24 @@ export class HomeComponent {
     }
   }
 
+  updatePost(){
+    if (this.editPostForm.valid) {
+      const postTitle = this.editPostForm.get('postTitle').value;
+      const postContent = this.editPostForm.get('postContent').value;
+      let post = {
+        title: postTitle,
+        content: postContent
+      }
+
+      this._postService.update(this.postId, post)
+        .subscribe((data: any) => {
+          this.getPost();
+          this.editPostForm.reset();
+        });
+
+    }
+  }
+
   deletePost(postId: string){
     this._postService.delete(postId)
     .subscribe(() => {
@@ -81,7 +101,6 @@ export class HomeComponent {
           this.getPost();
           this.commentForm.reset();
         });
-
     }
   }
 
@@ -90,6 +109,20 @@ export class HomeComponent {
     .subscribe(() => {
       this.getPost();
     });
+  }
+
+  updateComment(){
+    if (this.editCommentForm.valid) {
+      const text = this.editCommentForm.get('text').value;
+
+      let comment = {text};
+
+      this._commentService.update(this.postId, this.commentId, comment)
+        .subscribe(() => {
+          this.getPost();
+          this.editCommentForm.reset();
+        });
+    }
   }
 
   getPost(){
@@ -102,4 +135,18 @@ export class HomeComponent {
     });
   }
   
+  setEditionInfo(post: any, comment: any){
+    this.postId = post.id;
+    this.commentId = comment.id;
+
+    this.editPostForm.patchValue({
+      postTitle: post.title,
+      postContent: post.content
+    });
+
+    this.editCommentForm.patchValue({
+      text: comment.text
+    });
+
+  }
 }
